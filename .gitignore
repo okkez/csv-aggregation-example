@@ -1,2 +1,3 @@
 *.csv
 /generator/main
+/aggregator-go/main
