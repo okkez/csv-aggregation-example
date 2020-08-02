@@ -1,3 +1,4 @@
 *.csv
 /generator/main
 /aggregator-go/main
+/aggregator-rust/target/
