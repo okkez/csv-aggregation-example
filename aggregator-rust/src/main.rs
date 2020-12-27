@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 use std::env;
 use std::error::Error;
 use std::fs::File;
@@ -19,7 +19,7 @@ fn run() -> Result<(), Box<dyn Error>> {
     let f = File::open(&args[1])?;
     let b = BufReader::new(f);
     let mut csv_reader = csv::ReaderBuilder::new().has_headers(true).from_reader(b);
-    let mut name_to_cost = HashMap::new();
+    let mut name_to_cost = BTreeMap::new();
 
     for result in csv_reader.deserialize() {
         let record: Record = result?;
@@ -30,13 +30,10 @@ fn run() -> Result<(), Box<dyn Error>> {
         name_to_cost.insert(record.name.clone(), record.cost + cost);
     }
 
-
-    let mut v = name_to_cost.into_iter().collect::<Vec<_>>();
-    v.sort_by(|x, y| x.0.cmp(&y.0));
-    for (name, cost) in v {
+    for (name, cost) in name_to_cost {
         println!("{}\t{:.3}", name, cost);
     }
-    
+
     Ok(())
 }
 
