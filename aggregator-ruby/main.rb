@@ -7,5 +7,5 @@ CSV.foreach(ARGV[0], headers: true) do |row|
 end
 
 name_to_cost.sort_by {|k, _| k }.each do |name, cost|
-  puts "#{name}\t#{cost.floor(2)}"
+  printf "%s\t%.3f\n", name, cost
 end
