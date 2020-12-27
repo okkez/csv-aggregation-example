@@ -61,7 +61,6 @@ func main() {
 	sort.Strings(keys)
 
 	for _, key := range keys {
-		fmt.Printf("%s\t%.2f\n", key, nameToCost[key])
+		fmt.Printf("%s\t%.3f\n", key, nameToCost[key])
 	}
-	
 }
