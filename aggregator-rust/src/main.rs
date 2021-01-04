@@ -1,10 +1,8 @@
 use std::collections::BTreeMap;
 use std::env;
 use std::error::Error;
-use std::fs::File;
-use std::io::BufReader;
 
-use serde::{Deserialize};
+use serde::Deserialize;
 
 #[derive(Deserialize, Debug)]
 struct Record {
@@ -15,19 +13,16 @@ struct Record {
 }
 
 fn run() -> Result<(), Box<dyn Error>> {
-    let args: Vec<String> = env::args().collect();
-    let f = File::open(&args[1])?;
-    let b = BufReader::new(f);
-    let mut csv_reader = csv::ReaderBuilder::new().has_headers(true).from_reader(b);
+    let path = env::args().nth(1).unwrap();
+    let mut csv_reader = csv::ReaderBuilder::new()
+        .has_headers(true)
+        .from_path(&path)?;
     let mut name_to_cost = BTreeMap::new();
 
     for result in csv_reader.deserialize() {
         let record: Record = result?;
-        let cost = match name_to_cost.get(&record.name) {
-            Some(value) => *value,
-            None => 0.0,
-        };
-        name_to_cost.insert(record.name.clone(), record.cost + cost);
+        let cost = record.cost;
+        *name_to_cost.entry(record.name).or_insert(0.0) += cost;
     }
 
     for (name, cost) in name_to_cost {
